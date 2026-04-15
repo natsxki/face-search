@@ -25,3 +25,34 @@ Ensure your project directory looks exactly like this before running the scripts
     ├── face_utils.py       <-- Helper functions for face encoding
     ├── search.py           <-- The search engine script
     └── video_utils.py      <-- Helper functions for processing video queries
+
+
+## 🛠️ Installation & Setup (macOS Guide)
+
+### 1. System Requirements
+You need Homebrew installed. Open your terminal and install the required C++ compilers:
+```bash
+brew install cmake openblas
+
+### 2. Create a Virtual Environment
+It is highly recommended to use a virtual environment to prevent system conflicts.
+
+```bash
+cd /path/to/your/project
+python3 -m venv venv
+source venv/bin/activate
+
+### 3. Install Python Dependencies
+With your (venv) activated, install the requirements:
+
+```bash
+python3 -m pip install -r requirements.txt
+
+
+⚠️ Important Fix for Python 3.12+ (Missing Models Error)
+
+On a modern version of Python, face_recognition might complain that its models aren't installed even when they are. Run these two commands to fix it permanently:
+
+```bash
+python3 -m pip install setuptools
+python3 -m pip install --force-reinstall git+[https://github.com/ageitgey/face_recognition_models](https://github.com/ageitgey/face_recognition_models)
