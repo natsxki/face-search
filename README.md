@@ -33,6 +33,8 @@ Ensure your project directory looks exactly like this before running the scripts
 You need Homebrew installed. Open your terminal and install the required C++ compilers:
 ```bash
 brew install cmake openblas
+```
+
 
 ### 2. Create a Virtual Environment
 It is highly recommended to use a virtual environment to prevent system conflicts.
@@ -41,13 +43,14 @@ It is highly recommended to use a virtual environment to prevent system conflict
 cd /path/to/your/project
 python3 -m venv venv
 source venv/bin/activate
+```
 
 ### 3. Install Python Dependencies
 With your (venv) activated, install the requirements:
 
 ```bash
 python3 -m pip install -r requirements.txt
-
+```
 
 ⚠️ Important Fix for Python 3.12+ (Missing Models Error)
 
