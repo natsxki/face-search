@@ -7,7 +7,8 @@ from video_utils import extract_encodings_from_video
 
 INDEX_PATH = "../data/index/faiss.index"
 META_PATH = "../data/index/metadata.pkl"
-
+# 0.36 is the squared L2 equivalent of the standard 0.6 Euclidean threshold
+DISTANCE_THRESHOLD = 0.36 # the standard face_recognition threshold for a match is a standard Euclidean distance of 0.6. Therefore, we need to filter FAISS results by a squared distance threshold of 0.36 (0.6^2)
 
 def search_from_image(image_path, k=50):
     image = face_recognition.load_image_file(image_path)
@@ -42,17 +43,19 @@ def search(query_encoding, k):
 
     results = set()
 
-    for idx in indices[0]:
-        if idx < len(metadata):
+    # iterate through distances and indices
+    for dist, idx in zip(distances[0],indices[0]):
+        if dist < DISTANCE_THRESHOLD and idx != -1 and idx < len(metadata):
             results.add(metadata[idx]["image_path"])
 
     return list(results)
 
 
 if __name__ == "__main__":
-    # Example usage:
+
+    #Real image to test !!
     results = search_from_image("../query.jpg")
 
-    print("Matching images:")
+    print(f"Found {len(results)} matching images:")
     for r in results:
         print(r)

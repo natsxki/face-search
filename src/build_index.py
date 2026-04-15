@@ -40,6 +40,8 @@ def build_index():
     index = faiss.IndexFlatL2(encodings.shape[1])
     index.add(encodings)
 
+    os.makedirs(os.path.dirname(INDEX_PATH), exist_ok=True)
+
     # Save index + metadata
     faiss.write_index(index, INDEX_PATH)
 
