@@ -29,12 +29,16 @@ Ensure your project directory looks exactly like this before running the scripts
 
 ## 🛠️ Installation & Setup (macOS Guide)
 
+### 0. Pictures upload
+* Add all your images into data/albums/
+* Add a clear photo of your face in the project root and rename it query.jpg/png/heic
+
+
 ### 1. System Requirements
 You need Homebrew installed. Open your terminal and install the required C++ compilers:
 ```bash
 brew install cmake openblas
 ```
-
 
 ### 2. Create a Virtual Environment
 It is highly recommended to use a virtual environment to prevent system conflicts.
