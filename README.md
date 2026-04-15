@@ -1,6 +1,7 @@
 # Album Face Search 
 
 A blazing-fast, (for the moment) local Python application designed to find pictures of a specific person (like yourself!) hidden among hundreds of photos taken. It uses advanced facial recognition to create encodings and FAISS (Facebook AI Similarity Search) to perform vector searches.
+Future improvements (on the way) : Applied to my school's photo club's work with 200-500 photos per album. 
 
 ## Features 🍓
 * **Speed:** Uses FAISS to search through thousands of faces in milliseconds.
