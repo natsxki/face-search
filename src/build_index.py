@@ -4,6 +4,11 @@ import pickle
 import faiss
 import face_recognition
 
+
+from pillow_heif import register_heif_opener
+register_heif_opener()
+
+
 from face_utils import get_face_encodings
 
 ALBUMS_DIR = "../data/albums"
