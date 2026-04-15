@@ -3,6 +3,9 @@ import pickle
 import faiss
 import face_recognition
 
+from pillow_heif import register_heif_opener
+register_heif_opener()
+
 from video_utils import extract_encodings_from_video
 
 INDEX_PATH = "../data/index/faiss.index"
@@ -54,7 +57,7 @@ def search(query_encoding, k):
 if __name__ == "__main__":
 
     #Real image to test !!
-    results = search_from_image("../query.jpg")
+    results = search_from_image("../query.png")
 
     print(f"Found {len(results)} matching images:")
     for r in results:
