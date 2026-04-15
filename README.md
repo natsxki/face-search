@@ -59,3 +59,15 @@ On a modern version of Python, face_recognition might complain that its models a
 ```bash
 python3 -m pip install setuptools
 python3 -m pip install --force-reinstall git+[https://github.com/ageitgey/face_recognition_models](https://github.com/ageitgey/face_recognition_models)
+```
+
+### 4. Setup
+Run, inside the `src/` folder:
+
+```bash
+python3 build_index.py
+```
+```bash
+python3 search.py
+```
+
