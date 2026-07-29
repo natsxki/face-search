@@ -1,77 +1,151 @@
-# Album Face Search 
+<div align="center">
 
-A blazing-fast, (for the moment) local Python application designed to find pictures of a specific person (like yourself!) hidden among hundreds of photos taken. It uses advanced facial recognition to create encodings and FAISS (Facebook AI Similarity Search) to perform vector searches.
-Future improvements (on the way) : Application to my school's photo club's work with more than 500 photos per album & online availability 
+# ⋆౨ৎ⋆ Album Face Search ⋆౨ৎ⋆
 
-## Features 🍓
-* **Speed:** Uses FAISS to search through thousands of faces in milliseconds.
-* **Apple Format Support:** Natively handles `.HEIC` photos from iPhones alongside `.JPG` and `.PNG`.
-* **Video Queries:** Extract your face profile directly from a video instead of just a static image.
-* **Local & Private:** No data is sent to the cloud. Everything processes on your own machine.
+***Find every photo of someone across hundreds of pictures, in milliseconds ♡***
 
-## Project Structure 
+<br>
 
-Ensure your project directory looks exactly like this before running the scripts:
+![Python](https://img.shields.io/badge/Python-3.10+-FFB5C2?style=flat-square&logo=python&logoColor=white)
+![FAISS](https://img.shields.io/badge/FAISS-vector%20search-C8B6FF?style=flat-square)
+![face_recognition](https://img.shields.io/badge/face__recognition-dlib-B5D8FF?style=flat-square)
+![OpenCV](https://img.shields.io/badge/OpenCV-video-B8E6D9?style=flat-square&logo=opencv&logoColor=white)
+![Local & Private](https://img.shields.io/badge/100%25-local%20♡%20private-FFE0B5?style=flat-square)
 
-```text
-├── README.md
-├── query.jpg               <-- The picture of the face you want to find
-├── requirements.txt
-├── data/
-│   ├── albums/             <-- Put all your pictures in here
-│   └── index/              <-- The FAISS database will be auto-generated here
-└── src/
-    ├── build_index.py      <-- Scans albums and builds the database
-    ├── face_utils.py       <-- Helper functions for face encoding
-    ├── search.py           <-- The search engine script
-    └── video_utils.py      <-- Helper functions for processing video queries
+<br>
+
+*A little local Python app that hunts down every picture of a specific person*
+*hiding in a big messy album — powered by facial recognition + FAISS.*
+
+</div>
+
+---
+
+## What is this?
+
+Ever taken hundreds of photos at an event and then had to scroll forever to find the ones with *you* in them? This finds them for you. ✧
+
+Give it a folder of pictures and one clear photo (or video!) of a face, and it returns every image that person appears in — searching thousands of faces in milliseconds, entirely on your own machine. No cloud, no uploads, nothing leaves your laptop. ♡
+
+> Originally built for personal albums — with a future goal of scaling it up to my school photo club's work (500+ photos per album) and putting it online.
+
+---
+
+## Features
+
+- **Fast** — [FAISS](https://github.com/facebookresearch/faiss) (Facebook AI Similarity Search) does exact nearest-neighbor lookups over face vectors in milliseconds
+- **Image *or* video queries** — search from a static photo, or extract a face profile from a short video by averaging encodings across frames
+- **iPhone-friendly** — reads Apple `.HEIC` photos via `pillow-heif`, alongside `.jpg` / `.jpeg` / `.png`
+- **Private by design** — everything runs locally; no data is ever sent anywhere
+- **Tunable matching** — a distance threshold keeps results tight so you don't get false matches
+
+---
+
+## How it works
+
+```
+   BUILD PHASE  (build_index.py)              SEARCH PHASE  (search.py)
+
+   data/albums/                               query.png  ── or ──  a video
+        │                                          │                  │
+        ▼                                          ▼                  ▼
+   detect faces                              detect face        sample frames,
+   (face_recognition/dlib)                   in query           average encodings
+        │                                          │                  │
+        ▼                                          └────────┬─────────┘
+   128-d encoding per face                                  ▼
+        │                                          128-d query vector
+        ▼                                                   │
+   FAISS IndexFlatL2  ◀───────── nearest-neighbor search ───┘
+   + metadata.pkl                                           │
+   (path + location)                                        ▼
+                                            keep matches under the L2
+                                            threshold  →  list of photos ✧
 ```
 
-## 🛠️ Installation & Setup (macOS Guide)
+**The details, for the curious:**
 
-### 0. Pictures upload
-* Add all your images into data/albums/
-* Add a clear photo of your face in the project root and rename it query.jpg/png/heic
+- Every face becomes a **128-dimensional encoding** (via `face_recognition`, which wraps dlib's model).
+- Encodings are stored in a **FAISS `IndexFlatL2`** (exact L2 search), with a parallel `metadata.pkl` holding each face's source image path and bounding box.
+- At search time, the query face is compared against the whole index. Matches are filtered by a **squared-L2 threshold of `0.36`** — which is the equivalent of `face_recognition`'s standard Euclidean cutoff of `0.6` (since `0.6² = 0.36`).
+- **Video queries** sample every 5th frame, encode any faces found, and **average** them into one robust query vector — nice for when a single photo is a bit blurry.
+- Results are de-duplicated by image path, so each matching photo shows up once.
 
+---
 
-### 1. System Requirements
-You need Homebrew installed. Open your terminal and install the required C++ compilers:
+## Project structure
+
+```
+face-search/
+├── query.png              <-- the face you want to find (jpg / png / heic)
+├── requirements.txt
+├── data/
+│   ├── albums/            <-- drop all your photos in here
+│   └── index/             <-- FAISS index + metadata, auto-generated ✧
+└── src/
+    ├── build_index.py     ⋆ scans albums → builds the FAISS database
+    ├── search.py          ✧ runs a query (image or video) → matching photos
+    ├── face_utils.py      · face detection + encoding helper
+    └── video_utils.py     · extracts an averaged encoding from a video
+```
+
+---
+
+## Installation & setup (macOS)
+
+### 0. Add your pictures
+
+- Put all your photos into `data/albums/`
+- Put one clear photo of the target face in the project root, named `query.jpg` / `.png` / `.heic`
+
+### 1. System requirements
+
+You'll need [Homebrew](https://brew.sh/). Install the C++ build tools FAISS and dlib rely on:
+
 ```bash
 brew install cmake openblas
 ```
 
-### 2. Create a Virtual Environment
-It is highly recommended to use a virtual environment to prevent system conflicts.
+### 2. Create a virtual environment
 
 ```bash
-cd /path/to/your/project
+cd /path/to/face-search
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Install Python Dependencies
-With your (venv) activated, install the requirements:
+### 3. Install Python dependencies
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
-⚠️ Important Fix for Python 3.12+ (Missing Models Error)
+> ⚠️ **Python 3.12+ fix (missing models error):** on newer Python, `face_recognition` sometimes can't find its models even when installed. Run these once to fix it permanently:
+> ```bash
+> python3 -m pip install setuptools
+> python3 -m pip install --force-reinstall git+https://github.com/ageitgey/face_recognition_models
+> ```
 
-On a modern version of Python, face_recognition might complain that its models aren't installed even when they are. Run these two commands to fix it permanently:
+### 4. Build the index, then search
 
-```bash
-python3 -m pip install setuptools
-python3 -m pip install --force-reinstall git+[https://github.com/ageitgey/face_recognition_models](https://github.com/ageitgey/face_recognition_models)
-```
-
-### 4. Setup
-Run, inside the `src/` folder:
+From inside the `src/` folder:
 
 ```bash
-python3 build_index.py
-```
-```bash
-python3 search.py
+python3 build_index.py     # scans data/albums/ and builds the database
+python3 search.py          # searches for ../query.png and prints matches
 ```
 
+---
+
+## Notes & next steps
+
+- The album indexer currently picks up `.jpg` / `.jpeg` / `.png`. `.HEIC` is registered globally (so HEIC *query* images work), but to index HEIC files sitting in your albums you'd just add `.heic` to the extension filter in `build_index.py`. ♡
+- Roadmap: scale to 500+ photos per album for the photo club, and an online version.
+
+---
+
+<div align="center">
+
+*Made by [**natsxki**](https://github.com/natsxki) ⋆౨ৎ⋆*
+
+</div>
