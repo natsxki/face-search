@@ -2,7 +2,7 @@
 
 # ⋆౨ৎ⋆ Album Face Search ⋆౨ৎ⋆
 
-***Find every photo of someone across hundreds of pictures, in milliseconds ♡***
+***Find every photo of someone across hundreds of pictures, in milliseconds***
 
 <br>
 
@@ -14,8 +14,8 @@
 
 <br>
 
-*A little local Python app that hunts down every picture of a specific person*
-*hiding in a big messy album — powered by facial recognition + FAISS.*
+*A little local Python app that hunts down every picture of a specific person in a big album*
+*powered by facial recognition + FAISS.*
 
 </div>
 
@@ -23,11 +23,9 @@
 
 ## What is this?
 
-Ever taken hundreds of photos at an event and then had to scroll forever to find the ones with *you* in them? This finds them for you. ✧
+Originally created this as a prototype for my school's Audiovisual club that has a few hundreds pictures for each of the +- hundred events per year on its website. I wanted students to be able to find their pictures without scrolling forever.
 
-Give it a folder of pictures and one clear photo (or video!) of a face, and it returns every image that person appears in — searching thousands of faces in milliseconds, entirely on your own machine. No cloud, no uploads, nothing leaves your laptop. ♡
-
-> Originally built for personal albums — with a future goal of scaling it up to my school photo club's work (500+ photos per album) and putting it online.
+Given a folder of pictures and one clear photo (or video!) of a face, this returns every image that person appears in — searching thousands of faces in milliseconds, entirely on your own machine. 
 
 ---
 
@@ -35,7 +33,7 @@ Give it a folder of pictures and one clear photo (or video!) of a face, and it r
 
 - **Fast** — [FAISS](https://github.com/facebookresearch/faiss) (Facebook AI Similarity Search) does exact nearest-neighbor lookups over face vectors in milliseconds
 - **Image *or* video queries** — search from a static photo, or extract a face profile from a short video by averaging encodings across frames
-- **iPhone-friendly** — reads Apple `.HEIC` photos via `pillow-heif`, alongside `.jpg` / `.jpeg` / `.png`
+- **iPhone friendly** — reads Apple `.HEIC` photos via `pillow-heif`, alongside `.jpg` / `.jpeg` / `.png`
 - **Private by design** — everything runs locally; no data is ever sent anywhere
 - **Tunable matching** — a distance threshold keeps results tight so you don't get false matches
 
@@ -63,7 +61,7 @@ Give it a folder of pictures and one clear photo (or video!) of a face, and it r
                                             threshold  →  list of photos ✧
 ```
 
-**The details, for the curious:**
+**Details**
 
 - Every face becomes a **128-dimensional encoding** (via `face_recognition`, which wraps dlib's model).
 - Encodings are stored in a **FAISS `IndexFlatL2`** (exact L2 search), with a parallel `metadata.pkl` holding each face's source image path and bounding box.
@@ -120,7 +118,7 @@ source venv/bin/activate
 python3 -m pip install -r requirements.txt
 ```
 
-> ⚠️ **Python 3.12+ fix (missing models error):** on newer Python, `face_recognition` sometimes can't find its models even when installed. Run these once to fix it permanently:
+> !!!! **Python 3.12+ fix (missing models error):** on newer Python, `face_recognition` sometimes can't find its models even when installed. Run these once to fix it permanently:
 > ```bash
 > python3 -m pip install setuptools
 > python3 -m pip install --force-reinstall git+https://github.com/ageitgey/face_recognition_models
@@ -137,15 +135,17 @@ python3 search.py          # searches for ../query.png and prints matches
 
 ---
 
-## Notes & next steps
+## Notes
 
-- The album indexer currently picks up `.jpg` / `.jpeg` / `.png`. `.HEIC` is registered globally (so HEIC *query* images work), but to index HEIC files sitting in your albums you'd just add `.heic` to the extension filter in `build_index.py`. ♡
-- Roadmap: scale to 500+ photos per album for the photo club, and an online version.
+- The album indexer currently picks up `.jpg` / `.jpeg` / `.png`. `.HEIC` is registered globally (so HEIC *query* images work), but to index HEIC files sitting in your albums you'd just add `.heic` to the extension filter in `build_index.py`. 
+- Roadmap: scale to 500+ photos per album for the photo club, eventually an online version.
+
+I decided not to go further with this project for now because all the challenges related to biometric data.
 
 ---
 
 <div align="center">
 
-*Made by [**natsxki**](https://github.com/natsxki) ⋆౨ৎ⋆*
+*Made by [**natsxki**](https://github.com/natsxki)*
 
 </div>
