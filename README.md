@@ -25,17 +25,17 @@
 
 Originally created this as a prototype for my school's Audiovisual club that has a few hundreds pictures for each of the +- hundred events per year on its website. I wanted students to be able to find their pictures without scrolling forever.
 
-Given a folder of pictures and one clear photo (or video!) of a face, this returns every image that person appears in — searching thousands of faces in milliseconds, entirely on your own machine. 
+Given a folder of pictures and one clear photo (or video!) of a face, this returns every image that person appears in - searching thousands of faces in milliseconds, entirely on your own machine. 
 
 ---
 
 ## Features
 
-- **Fast** — [FAISS](https://github.com/facebookresearch/faiss) (Facebook AI Similarity Search) does exact nearest-neighbor lookups over face vectors in milliseconds
-- **Image *or* video queries** — search from a static photo, or extract a face profile from a short video by averaging encodings across frames
-- **iPhone friendly** — reads Apple `.HEIC` photos via `pillow-heif`, alongside `.jpg` / `.jpeg` / `.png`
-- **Private by design** — everything runs locally; no data is ever sent anywhere
-- **Tunable matching** — a distance threshold keeps results tight so you don't get false matches
+- **Fast** - [FAISS](https://github.com/facebookresearch/faiss) (Facebook AI Similarity Search) does exact nearest-neighbor lookups over face vectors in milliseconds
+- **Image *or* video queries** - search from a static photo, or extract a face profile from a short video by averaging encodings across frames
+- **iPhone friendly** - reads Apple `.HEIC` photos via `pillow-heif`, alongside `.jpg` / `.jpeg` / `.png`
+- **Private by design** - everything runs locally; no data is ever sent anywhere
+- **Tunable matching** - a distance threshold keeps results tight so you don't get false matches
 
 ---
 
@@ -65,8 +65,8 @@ Given a folder of pictures and one clear photo (or video!) of a face, this retur
 
 - Every face becomes a **128-dimensional encoding** (via `face_recognition`, which wraps dlib's model).
 - Encodings are stored in a **FAISS `IndexFlatL2`** (exact L2 search), with a parallel `metadata.pkl` holding each face's source image path and bounding box.
-- At search time, the query face is compared against the whole index. Matches are filtered by a **squared-L2 threshold of `0.36`** — which is the equivalent of `face_recognition`'s standard Euclidean cutoff of `0.6` (since `0.6² = 0.36`).
-- **Video queries** sample every 5th frame, encode any faces found, and **average** them into one robust query vector — nice for when a single photo is a bit blurry.
+- At search time, the query face is compared against the whole index. Matches are filtered by a **squared-L2 threshold of `0.36`** - which is the equivalent of `face_recognition`'s standard Euclidean cutoff of `0.6` (since `0.6² = 0.36`).
+- **Video queries** sample every 5th frame, encode any faces found, and **average** them into one robust query vector - nice for when a single photo is a bit blurry.
 - Results are de-duplicated by image path, so each matching photo shows up once.
 
 ---
